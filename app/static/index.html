@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opensource G-ADK Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="loader-ring"></div>
+            <svg class="loader-logo" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 512 512">
+                <g>
+                    <path
+                        d="M 347.39 273.55 C342.15,274.88 333.51,276.26 328.18,276.61 L 318.50 277.26 L 321.57 273.88 C330.43,264.12 330.33,257.74 321.15,247.75 L 318.63 245.00 L 323.56 244.98 C329.28,244.96 340.33,242.77 346.93,240.35 C349.44,239.43 355.16,236.50 359.63,233.84 C382.55,220.22 396.40,193.80 394.65,167.02 C393.87,154.92 392.18,148.74 386.57,137.41 C376.84,117.75 357.68,103.10 335.79,98.59 C329.26,97.24 319.02,97.00 268.79,96.98 L 209.50 96.96 L 206.20 92.99 C199.42,84.83 199.41,77.22 206.18,69.54 L 210.25 64.90 L 273.88 65.23 L 337.50 65.56 L 347.21 68.21 C366.71,73.54 382.56,82.77 396.08,96.68 C410.22,111.21 418.63,125.89 423.79,145.00 C426.07,153.42 426.36,156.38 426.34,171.00 C426.32,185.64 426.01,188.62 423.66,197.48 C418.45,217.05 407.84,234.49 392.20,249.19 C379.84,260.81 364.30,269.26 347.39,273.55 Z"
+                        fill="rgb(54,166,86)" />
+                    <path
+                        d="M 176.00 243.45 C185.63,245.51 319.30,245.60 334.57,243.64 C330.39,244.45 326.35,244.97 323.56,244.98 L 318.63 245.00 L 321.15 247.75 C330.33,257.74 330.43,264.12 321.57,273.88 L 319.20 276.49 L 259.50 276.62 C216.60,276.72 178.84,276.40 175.58,275.92 C153.68,272.64 134.40,263.04 117.75,247.14 C85.16,216.00 75.91,167.61 94.76,126.88 C100.17,115.20 105.81,107.09 115.42,97.16 C127.23,84.97 141.53,75.88 157.01,70.71 C159.92,69.74 162.23,68.95 164.57,68.31 C172.10,66.25 180.04,65.70 209.68,65.55 L 206.18 69.54 C199.41,77.22 199.42,84.83 206.20,92.99 L 209.50 96.96 L 223.07 96.97 C199.38,97.21 180.30,97.75 176.33,98.57 C160.76,101.78 150.20,107.63 138.50,119.52 C126.73,131.47 120.61,143.34 118.04,159.19 C115.82,172.87 117.48,186.61 122.95,199.89 C131.88,221.53 152.41,238.39 176.00,243.45 Z"
+                        fill="rgb(67,134,241)" />
+                    <circle class="eye eye-left" cx="195" cy="170" r="18" fill="rgb(67,134,241)" />
+                    <circle class="eye eye-right" cx="320" cy="170" r="18" fill="rgb(67,134,241)" />
+                    <path
+                        d="M 360.24 434.70 C348.46,439.88 336.02,429.35 338.48,416.27 C339.36,411.54 343.01,407.97 367.25,388.10 C377.56,379.64 386.00,372.58 386.00,372.41 C386.00,372.23 383.81,370.38 381.14,368.30 C375.32,363.74 357.50,348.92 347.42,340.25 C339.40,333.35 337.40,329.50 338.31,322.72 C338.91,318.27 341.16,314.72 345.39,311.56 C347.44,310.03 349.65,309.50 353.97,309.50 C358.90,309.50 360.42,309.96 363.77,312.50 C371.24,318.15 413.40,353.49 419.36,359.10 C425.05,364.46 425.33,364.96 425.78,370.41 C426.41,377.99 424.36,382.23 417.16,388.20 C410.84,393.44 395.82,405.99 376.11,422.50 C368.89,428.55 361.75,434.04 360.24,434.70 Z"
+                        fill="rgb(233,66,54)" />
+                    <path
+                        d="M 262.76 433.33 C259.23,435.97 251.41,436.53 247.32,434.44 C245.57,433.55 241.30,430.35 237.82,427.33 C234.34,424.31 228.35,419.29 224.51,416.17 C220.66,413.05 213.52,407.12 208.65,403.00 C203.77,398.88 198.31,394.36 196.50,392.96 C185.17,384.22 182.00,379.74 182.00,372.50 L 182.00 372.48 C182.00,370.89 182.00,369.60 182.24,368.35 C183.26,363.00 188.68,358.48 217.41,334.50 C242.66,313.42 246.46,310.08 250.61,309.58 C251.39,309.48 252.19,309.49 253.14,309.50 C253.42,309.50 253.71,309.50 254.03,309.50 C258.35,309.50 260.56,310.03 262.61,311.56 C266.84,314.72 269.09,318.27 269.69,322.72 C270.60,329.51 268.60,333.35 260.57,340.25 C253.27,346.51 228.57,367.17 224.14,370.71 L 221.77 372.60 L 231.91 380.83 C237.48,385.35 243.05,389.90 244.27,390.93 C245.50,391.96 250.89,396.48 256.26,400.96 C268.31,411.02 269.50,412.74 269.50,420.13 C269.50,426.27 267.82,429.55 262.76,433.33 Z"
+                        fill="rgb(233,66,54)" />
+                    <path
+                        d="M 151.62 444.44 C149.06,446.35 147.36,446.51 128.18,446.68 C102.58,446.89 99.26,446.16 92.36,438.84 C90.90,437.28 89.74,436.18 88.83,434.91 C85.48,430.21 85.49,423.13 85.50,381.59 C85.50,378.88 85.50,376.02 85.50,373.00 C85.50,318.01 85.52,317.46 87.66,313.50 C90.22,308.77 95.13,303.95 100.00,301.38 C102.98,299.80 106.43,299.48 123.35,299.17 C134.27,298.98 144.74,299.10 146.62,299.46 C157.82,301.56 162.60,316.70 154.85,325.52 C150.81,330.12 146.99,330.99 130.75,330.99 L 117.00 331.00 L 117.00 414.86 L 132.93 415.18 C147.17,415.47 149.15,415.72 151.62,417.56 C156.90,421.51 158.50,424.67 158.47,431.05 C158.43,437.41 156.82,440.55 151.62,444.44 Z"
+                        fill="rgb(248,188,8)" />
+                </g>
+            </svg>
+            <div class="loader-percentage" id="loadPercent">0%</div>
+        </div>
+        <div class="loader-credit">Created by Nishant Deshmukh</div>
+    </div>
+
+    <div class="background-glow"></div>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/static/logo.png" alt="Agent Dev Kit" class="logo-image">
+                <div class="logo-text-group">
+                    <span class="logo-subtitle">Opensource</span>
+                    <span class="logo-title">G-ADK Agents</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3><i class="fa-solid fa-layer-group"></i> Project Overview</h3>
+                <p>A high-performance Data Science Agent built entirely with <strong>open-source tools</strong> and
+                    <strong>zero cost</strong>. Powered by Google ADK, LiteLLM, and Groq's free API tier.
+                </p>
+            </div>
+
+            <div class="developer-card">
+                <div class="card-header">
+                    <div class="card-image-container">
+                        <img src="/static/profile_mine.png" alt="Nishant Deshmukh" class="card-image">
+                    </div>
+                    <div class="card-info">
+                        <h2 class="dev-name-large">Nishant Deshmukh <i
+                                class="fa-solid fa-certificate verified-icon"></i></h2>
+                        <p class="dev-role">AI/ML Engineer @ TCS</p>
+                    </div>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-box">
+                        <span class="stat-value">1,204</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <a href="https://www.linkedin.com/in/nishant-deshmukh2116/" target="_blank" class="follow-btn">
+                        Follow <i class="fa-solid fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="status-indicator-sidebar">
+                <span class="dot"></span> System Online
+            </div>
+        </div>
+
+        <div class="main-content">
+            <header class="header mobile-only">
+                <div class="logo">
+                    <img src="/static/logo.png" alt="Agent Dev Kit" class="logo-image">
+                    <div class="logo-text-group">
+                        <span class="logo-subtitle">Opensource</span>
+                        <span class="logo-title">G-ADK Agents</span>
+                    </div>
+                </div>
+            </header>
+            <div class="top-slogans">
+                Zero Cost Open Source <span class="divider">:</span> Instant Visualizations <span
+                    class="divider">:</span> Smart Context
+            </div>
+
+            <a href="/data-manager" class="nav-menu-btn" title="Manage Data">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </a>
+
+            <main class="chat-container">
+                <div id="chat-history" class="chat-history">
+                    <div class="message system-message">
+                        <div class="avatar"><img src="/static/logo.png" alt="Bot" class="avatar-icon"></div>
+                        <div class="content">
+                            <p>Hello! I'm your Data Science AI Assistant. Ask me anything about your data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="suggestions-container">
+                        <div class="suggestion-chip" data-prompt="Display a pie chart of sales by product">Sales chart
+                        </div>
+                        <div class="suggestion-chip" data-prompt="Analyze the revenue trend over time">Revenue trend
+                        </div>
+                    </div>
+                    <form id="chat-form">
+                        <div class="input-wrapper">
+                            <input type="text" id="user-input" placeholder="Ask something about your data..."
+                                autocomplete="off">
+                            <button type="submit" id="send-btn">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="/static/script.js"></script>
+    <script>
+        (function () {
+            let percent = 0;
+            const loader = document.getElementById('loading-screen');
+            const percentEl = document.getElementById('loadPercent');
+
+            const interval = setInterval(function () {
+                percent += Math.random() * 15;
+                if (percent >= 100) {
+                    percent = 100;
+                    clearInterval(interval);
+                    setTimeout(function () {
+                        loader.classList.add('hidden');
+                    }, 300);
+                }
+                percentEl.textContent = Math.floor(percent) + '%';
+            }, 100);
+        })();
+    </script>
+</body>
+
+</html>

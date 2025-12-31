@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Manager - Opensource G-ADK Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        
+        .background-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(66, 133, 244, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(52, 168, 83, 0.08) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .data-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .glass-panel {
+            background: rgba(30, 30, 35, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(40, 40, 45, 0.4);
+        }
+
+        .header-actions h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .content-area {
+            padding: 32px;
+            min-height: 500px;
+            position: relative;
+        }
+
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px;
+            border-radius: 12px;
+            width: fit-content;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab {
+            padding: 8px 20px;
+            cursor: pointer;
+            color: #94a3b8;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            
+            color: white;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+        }
+
+        
+        .table-list {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .table-chip {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 20px;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            color: #cbd5e1;
+        }
+
+        .table-chip:hover,
+        .table-chip.active {
+            border-color: var(--primary);
+            background: rgba(66, 133, 244, 0.15);
+            color: white;
+        }
+
+        
+        .view-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 16px;
+            display: none;
+            
+        }
+
+        .ctrl-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .btn-success:hover {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        
+        .data-table-wrapper {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .data-table-wrapper.visible {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th {
+            background: rgba(20, 20, 25, 0.95);
+            backdrop-filter: blur(4px);
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover td {
+            background: rgba(66, 133, 244, 0.12) !important;
+            color: #f1f5f9;
+        }
+
+        .row-action-btn {
+            color: #ef4444;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .row-action-btn:hover {
+            opacity: 1;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        
+        .create-form {
+            max-width: 600px;
+            display: none;
+        }
+
+        .create-form.visible {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+        }
+
+        .col-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr auto auto auto;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .checkbox-label input {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .remove-col {
+            color: #ef4444;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .remove-col:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 99px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(66, 133, 244, 0.05);
+        }
+
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: #1e1e24;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-glow"></div>
+    <div class="data-container">
+        <div class="glass-panel">
+            <div class="header-actions">
+                <h1>Data Manager</h1>
+                <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Agents</a>
+            </div>
+
+            <div class="content-area">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('view')">View Data</div>
+                    <div class="tab" onclick="switchTab('create')">Create New Table</div>
+                </div>
+
+                <!-- View Section -->
+                <div id="view-section">
+                    <div class="table-list" id="tableList">
+                        <!-- Populated via JS -->
+                        <div class="table-chip">Loading...</div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="view-controls" id="viewControls">
+                        <button class="ctrl-btn btn-success" onclick="openInsertModal()">
+                            <i class="fa-solid fa-plus"></i> Insert Row
+                        </button>
+                        <button class="ctrl-btn btn-danger" onclick="deleteTable()">
+                            <i class="fa-solid fa-trash"></i> Drop Table
+                        </button>
+                    </div>
+
+                    <div id="tableContent" class="data-table-wrapper">
+                        <div style="padding: 40px; text-align: center; color: #64748b;">
+                            <i class="fa-solid fa-table"
+                                style="font-size: 2rem; margin-bottom: 16px; display: block;"></i>
+                            Select a table above to view data
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Section -->
+                <div id="create-section" class="create-form">
+                    <div class="form-group">
+                        <label>Table Name</label>
+                        <input type="text" id="tableName" placeholder="e.g., users">
+                    </div>
+
+                    <div id="columnsContainer">
+                        <label>Columns</label>
+                        <!-- Initial Column -->
+                        <div class="col-row">
+                            <input type="text" placeholder="Column Name" class="col-name" value="id">
+                            <select class="col-type">
+                                <option value="INTEGER">Integer</option>
+                                <option value="TEXT">Text</option>
+                                <option value="REAL">Real (Decimal)</option>
+                                <option value="DATE">Date</option>
+                            </select>
+                            <label class="checkbox-label"><input type="checkbox" class="col-pk" checked> PK</label>
+                            <label class="checkbox-label"><input type="checkbox" class="col-nn"> Req</label>
+                            <i class="fa-solid fa-trash remove-col" onclick="this.parentElement.remove()"
+                                style="opacity:0.3; pointer-events:none;"></i>
+                        </div>
+                    </div>
+
+                    <button class="btn-secondary" onclick="addColumnRow()">+ Add Column</button>
+                    <button class="btn-primary" onclick="createTable()">Create Table</button>
+                    <div id="createStatus" style="margin-top: 15px; text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insert Modal -->
+    <div class="modal-overlay" id="insertModal">
+        <div class="modal">
+            <h2 style="margin-top:0;">Insert Row</h2>
+            <div id="insertFormFields"></div>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn-secondary" onclick="closeInsertModal()" style="margin-bottom:0;">Cancel</button>
+                <button class="btn-primary" onclick="insertData()"
+                    style="width: auto; padding: 10px 24px;">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTable = null;
+        let currentColumns = [];
+
+        // Init
+        fetchTables();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'view') {
+                document.getElementById('view-section').style.display = 'block';
+                document.getElementById('create-section').classList.remove('visible');
+            } else {
+                document.getElementById('view-section').style.display = 'none';
+                document.getElementById('create-section').classList.add('visible');
+            }
+        }
+
+        async function fetchTables() {
+            const res = await fetch('/api/tables');
+            const data = await res.json();
+            const container = document.getElementById('tableList');
+            container.innerHTML = '';
+
+            data.tables.forEach(table => {
+                const chip = document.createElement('div');
+                chip.className = 'table-chip';
+                chip.textContent = table;
+                chip.onclick = () => loadTableData(table, chip);
+                container.appendChild(chip);
+            });
+
+            // If deleting current table, clear view
+            if (currentTable && !data.tables.includes(currentTable)) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div style="padding: 60px; text-align: center;">
+                        <i class="fa-solid fa-check-circle" style="font-size: 3rem; color: #22c55e; margin-bottom: 16px; display: block;"></i>
+                        <span style="font-size: 1.1rem; color: #e2e8f0;">Table deleted successfully</span>
+                    </div>
+                `;
+                document.getElementById('viewControls').style.display = 'none';
+                currentTable = null;
+            }
+        }
+
+        async function loadTableData(tableName, chipElement) {
+            currentTable = tableName;
+            // UI Active State
+            if (chipElement) {
+                document.querySelectorAll('.table-chip').forEach(c => c.classList.remove('active'));
+                chipElement.classList.add('active');
+            }
+
+            const contentDiv = document.getElementById('tableContent');
+            contentDiv.innerHTML = '<div style="padding:40px; text-align:center; color:#94a3b8;">Loading...</div>';
+            contentDiv.classList.add('visible');
+            document.getElementById('viewControls').style.display = 'none'; // Hide until loaded
+
+            try {
+                const res = await fetch(`/api/table/${tableName}`);
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                // Store columns for insert
+                // Filter out 'rowid' from displayed columns if present in display list (it usually isn't in 'columns' unless requested explicitly?
+                // The API returns ['rowid', 'col1', ...] if SELECT rowid, *
+                // Wait, sqlite return `rowid` only if I ask. I asked.
+                // But `cursor.description` might NOT include `rowid` if I used `SELECT rowid, *`.
+                // Actually `cursor.description` will include rowid if I selected it.
+                // Let's filter `rowid` for display/insert, but keep it for deletion.
+
+                currentColumns = data.columns.filter(c => c !== 'rowid');
+
+                let html = '<table><thead><tr>';
+                currentColumns.forEach(col => html += `<th>${col}</th>`);
+                html += '<th style="width: 50px;"></th>'; // Actions col
+                html += '</tr></thead><tbody>';
+
+                if (data.data.length === 0) {
+                    html += `<tr><td colspan="${currentColumns.length + 1}" style="text-align:center; padding: 40px; color: #94a3b8;">No data found</td></tr>`;
+                } else {
+                    data.data.forEach(row => {
+                        html += '<tr>';
+                        currentColumns.forEach(col => html += `<td>${row[col]}</td>`);
+                        // Delete Button (uses rowid if available, else...)
+                        const rid = row['rowid'];
+                        html += `<td><i class="fa-solid fa-trash row-action-btn" onclick="deleteRow(${rid})"></i></td>`;
+                        html += '</tr>';
+                    });
+                }
+                html += '</tbody></table>';
+                contentDiv.innerHTML = html;
+                document.getElementById('viewControls').style.display = 'flex';
+
+            } catch (e) {
+                contentDiv.innerHTML = `<div style="padding:20px; color:#ef4444;">Error: ${e.message}</div>`;
+            }
+        }
+
+        async function deleteTable() {
+            if (!currentTable) return;
+            if (!confirm(`Are you sure you want to DROP table '${currentTable}'? This cannot be undone.`)) return;
+
+            try {
+                const res = await fetch(`/api/table/${currentTable}`, { method: 'DELETE' });
+                const result = await res.json();
+                if (result.error) throw new Error(result.error);
+
+                // Show success in table area, then refresh list
+                document.getElementById('tableContent').innerHTML = `
+                    <div style="padding: 60px; text-align: center;">
+                        <i class="fa-solid fa-check-circle" style="font-size: 3rem; color: #22c55e; margin-bottom: 16px; display: block;"></i>
+                        <span style="font-size: 1.1rem; color: #e2e8f0;">Table '${currentTable}' deleted successfully</span>
+                    </div>
+                `;
+                document.getElementById('viewControls').style.display = 'none';
+                currentTable = null;
+                fetchTables();
+
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+
+        async function deleteRow(rowid) {
+            if (!confirm('Delete this row?')) return;
+            try {
+                const res = await fetch(`/api/table/${currentTable}/row/${rowid}`, { method: 'DELETE' });
+                const result = await res.json();
+                if (result.error) throw new Error(result.error);
+
+                // Refresh
+                loadTableData(currentTable, document.querySelector(`.table-chip.active`));
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+
+        // --- Insert Logic ---
+        function openInsertModal() {
+            const container = document.getElementById('insertFormFields');
+            container.innerHTML = '';
+
+            currentColumns.forEach(col => {
+                // Skip ID if it looks like auto-increment? No, keep it simple, let user input or leave blank?
+                // If ID is auto-increment, user should probably leave it blank or 0.
+                if (col.toLowerCase() === 'id' || col.toLowerCase() === 'rowid') return;
+
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.style.marginBottom = '15px';
+                div.innerHTML = `
+                    <label>${col}</label>
+                    <input type="text" data-col="${col}" class="insert-input">
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('insertModal').style.display = 'flex';
+        }
+
+        function closeInsertModal() {
+            document.getElementById('insertModal').style.display = 'none';
+        }
+
+        async function insertData() {
+            const inputs = document.querySelectorAll('.insert-input');
+            const data = {};
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                // Treat empty string as null? Or empty string?
+                // For now send empty string.
+                if (val) data[input.dataset.col] = val;
+            });
+
+            try {
+                const res = await fetch(`/api/table/${currentTable}/insert`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data })
+                });
+                const result = await res.json();
+                if (result.error) throw new Error(result.error);
+
+                closeInsertModal();
+                loadTableData(currentTable, document.querySelector(`.table-chip.active`));
+
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+
+        // --- Create Logic ---
+        function addColumnRow() {
+            const div = document.createElement('div');
+            div.className = 'col-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Column Name" class="col-name">
+                <select class="col-type">
+                    <option value="TEXT">Text</option>
+                    <option value="INTEGER">Integer</option>
+                    <option value="REAL">Real</option>
+                    <option value="DATE">Date</option>
+                </select>
+                <label class="checkbox-label"><input type="checkbox" class="col-pk" onchange="handlePkChange(this)"> PK</label>
+                <label class="checkbox-label"><input type="checkbox" class="col-nn"> Req</label>
+                <i class="fa-solid fa-trash remove-col" onclick="this.parentElement.remove()"></i>
+            `;
+            document.getElementById('columnsContainer').appendChild(div);
+        }
+
+        // Only one PK allowed
+        function handlePkChange(checkbox) {
+            if (checkbox.checked) {
+                // Uncheck all other PKs
+                document.querySelectorAll('.col-pk').forEach(cb => {
+                    if (cb !== checkbox) cb.checked = false;
+                });
+            }
+        }
+
+        // Attach listener to initial PK checkbox too
+        document.querySelector('.col-pk').addEventListener('change', function () {
+            handlePkChange(this);
+        });
+
+        async function createTable() {
+            const name = document.getElementById('tableName').value;
+            const rows = document.querySelectorAll('.col-row');
+            const columns = [];
+
+            rows.forEach(row => {
+                const cName = row.querySelector('.col-name').value;
+                const cType = row.querySelector('.col-type').value;
+                const cPk = row.querySelector('.col-pk').checked;
+                const cNn = row.querySelector('.col-nn').checked;
+
+                if (cName) columns.push({
+                    name: cName,
+                    type: cType,
+                    primary_key: cPk,
+                    not_null: cNn
+                });
+            });
+
+            if (!name || columns.length === 0) {
+                alert("Please enter table name and at least one column");
+                return;
+            }
+
+            const btn = document.querySelector('.btn-primary');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            try {
+                const res = await fetch('/api/create-table', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, columns })
+                });
+                const result = await res.json();
+
+                if (result.error) throw new Error(result.error);
+
+                document.getElementById('createStatus').innerHTML = `<span style="color:#22c55e"><i class="fa-solid fa-check"></i> ${result.message}</span>`;
+                fetchTables(); // Refresh list
+                document.getElementById('tableName').value = ''; // Reset
+
+            } catch (e) {
+                document.getElementById('createStatus').innerHTML = `<span style="color:#ef4444">Error: ${e.message}</span>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Table';
+            }
+        }
+    </script>
+</body>
+
+</html>

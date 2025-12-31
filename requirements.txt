@@ -1,0 +1,11 @@
+google-adk==1.20.0
+fastapi
+uvicorn
+litellm
+python-dotenv
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp
+matplotlib
+pandas
+plotly

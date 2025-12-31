@@ -1,0 +1,10 @@
+
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+demo.db
+app/static/charts/*.json
+app/static/charts/*.png
+agent.log
