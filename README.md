@@ -46,8 +46,7 @@ A powerful, open-source AI agent interface built with Google's Agent Development
 4.  **Configure Environment:**
     Create a `.env` file in the root directory and add your API credentials:
     ```env
-    OPENAI_API_KEY=your_api_key_here
-    # Add other keys as required by your LiteLLM configuration
+    GROQ_API_KEY=your_groq_api_key_here
     ```
 
 ## Running the Application
