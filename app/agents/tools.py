@@ -1,21 +1,21 @@
 import logging
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
-from .sub_agents.alloydb.tools import alloydb_agent
+from .sub_agents.sql_agent.tools import sql_agent
 
 logger = logging.getLogger(__name__)
 
-async def call_alloydb_agent(
+async def call_sql_agent(
     question: str,
     tool_context: ToolContext,
 ):
-    logger.debug("call_alloydb_agent: %s", question)
-    agent_tool = AgentTool(agent=alloydb_agent)
+    logger.debug("call_sql_agent: %s", question)
+    agent_tool = AgentTool(agent=sql_agent)
     
     output = await agent_tool.run_async(
         args={"request": question}, tool_context=tool_context
     )
-    tool_context.state["alloydb_agent_output"] = output
+    tool_context.state["sql_agent_output"] = output
     return output
 
 async def generate_plot(
@@ -32,14 +32,16 @@ async def generate_plot(
     import pandas as pd
 
     df = pd.DataFrame({'x': x, 'y': y})
+    # Ensure y and x is numeric/correct type
+    df['y'] = pd.to_numeric(df['y'], errors='coerce').fillna(0)
     
     primary_color = '#6366f1'
     accent_color = '#2dd4bf'
     text_color = '#f8fafc'
     
     if plot_type == 'bar':
-        fig = px.bar(df, x='x', y='y', title=title, labels={'x': xlabel, 'y': ylabel}, template='plotly_dark')
-        fig.update_traces(marker_color=primary_color)
+        fig = px.bar(df, x='x', y='y', title=title, labels={'x': xlabel, 'y': ylabel}, template='plotly_dark', color='x')
+        # fig.update_traces(marker_color=primary_color) # We use color='x' now
     elif plot_type == 'line':
         fig = px.line(df, x='x', y='y', title=title, labels={'x': xlabel, 'y': ylabel}, markers=True, template='plotly_dark')
         fig.update_traces(line_color=accent_color)
@@ -51,7 +53,7 @@ async def generate_plot(
         fig = px.pie(df, names='x', values='y', title=title, template='plotly_dark', color_discrete_sequence=pie_colors)
         fig.update_traces(textposition='inside', textinfo='percent+label')
     else:
-        fig = px.bar(df, x='x', y='y', title=title, template='plotly_dark')
+        fig = px.bar(df, x='x', y='y', title=title, template='plotly_dark', color='x')
 
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -59,7 +61,7 @@ async def generate_plot(
         font=dict(family="Inter, sans-serif", color=text_color, size=11),
         margin=dict(t=40, l=10, r=10, b=10),
         title_font_size=16,
-        showlegend=False,
+        showlegend=True,  # Always show legend now that we have colors
         autosize=True
     )
 

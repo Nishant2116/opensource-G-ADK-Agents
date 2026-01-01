@@ -216,17 +216,26 @@ async def query_agent(prompt: str):
 
     except Exception as e:
         error_msg = str(e)
+        
+        # Rate limit handling
         if "RateLimitError" in error_msg or "429" in error_msg:
              logger.warning(f"Rate limit: {e}")
              import re
              match = re.search(r"try again in (\d+(\.\d+)?)s", error_msg)
              wait_time = match.group(1) if match else "20"
              return {"response": f"⚠️ **System Busy**: Rate limit reached. Please try again in **{wait_time} seconds**."}
-             
+        
+        # Tool validation / BadRequest handling (e.g., exec_python missing)
+        if "Tool call validation failed" in error_msg or "exec_python" in error_msg:
+             logger.warning(f"Tool validation error (likely hallucinations): {e}")
+             return {"response": "⚠️ **System Busy**: The AI is momentarily overwhelmed. Please wait 10-15 seconds and try asking again."}
+
         logger.error(f"Error processing query: {e}")
         import traceback
         traceback.print_exc()
-        return {"error": str(e)}
+        
+        # Generic user-friendly error
+        return {"response": "⚠️ **System Busy**: An internal error occurred. Please wait a moment and try again."}
 
 def clean_response(text: str) -> str:
     lower_text = text.lower()

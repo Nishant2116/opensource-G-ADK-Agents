@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     autosize: true
                 };
 
-                Plotly.newPlot(id, graphData.data, layout, { responsive: true, displayModeBar: false });
+                Plotly.newPlot(id, graphData.data, layout, { responsive: true, displayModeBar: 'hover' });
 
                 const chartWidth = chartDiv.offsetWidth;
                 if (chartWidth > 0) {

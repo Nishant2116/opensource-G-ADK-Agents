@@ -64,9 +64,9 @@ def execute_sql(query: str):
 
 from app.agent_setup import llm
 
-alloydb_agent = LlmAgent(
+sql_agent = LlmAgent(
     model=llm,
-    name="alloydb_agent",
+    name="sql_agent",
     instruction="""
     You are a SQL expert. Your task is to answer user questions by querying the local SQLite database.
     
@@ -76,7 +76,7 @@ alloydb_agent = LlmAgent(
     2. Based on the schema, generate a valid SQLite query (Always include descriptive columns!).
     3. Use the `execute_sql` tool.
     4. Return the results.
-
+    
     <CONSTRAINTS>
     - Focus on accurate SQL generation.
     - Return the tool output directly.

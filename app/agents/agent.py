@@ -8,14 +8,14 @@ from google.adk.agents.callback_context import CallbackContext
 from google.genai import types
 
 from .prompts import return_instructions_root
-from .tools import call_alloydb_agent, generate_plot
+from .tools import call_sql_agent, generate_plot
 from app.agent_setup import llm
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
 
 def get_root_agent() -> LlmAgent:
-    tools = [call_alloydb_agent, generate_plot]
+    tools = [call_sql_agent, generate_plot]
     
     agent = LlmAgent(
         model=llm,
